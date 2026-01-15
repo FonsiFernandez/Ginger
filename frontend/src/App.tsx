@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import Dashboard from "./pages/Dashboard";
 import ProfileSetup from "./pages/ProfileSetup";
 import Profile from "./pages/Profile";
+import FoodHistory from "./pages/FoodHistory";
 import { apiGet } from "@/lib/api";
 import type { UserDto } from "@/types";
 
-type View = "dashboard" | "profile";
+type View = "dashboard" | "profile" | "foodHistory";
 
 function needsOnboarding(u: UserDto | null) {
     if (!u) return true;
@@ -21,18 +22,27 @@ export default function App() {
     useEffect(() => {
         (async () => {
             const users = await apiGet<UserDto[]>("/users");
-            setUser(users?.[0] ?? null);
-            setActiveUser(users?.[0] ?? null);
+            const first = users?.[0] ?? null;
+            setUser(first);
+            setActiveUser(first);
             setLoading(false);
         })();
     }, []);
 
     if (loading) return null;
-
     if (!activeUser) return null;
 
+    // Onboarding: mantenemos tu lógica exactamente igual
     if (needsOnboarding(user)) {
-        return <ProfileSetup user={user ?? { id: 1, name: "User" } as any} onDone={setUser} />;
+        return (
+            <ProfileSetup
+                user={user ?? ({ id: 1, name: "User" } as any)}
+                onDone={(updated) => {
+                    setUser(updated);
+                    setActiveUser(updated);
+                }}
+            />
+        );
     }
 
     if (view === "profile") {
@@ -44,5 +54,24 @@ export default function App() {
         );
     }
 
-    return <Dashboard onOpenProfile={() => setView("profile")} />;
+    if (view === "foodHistory") {
+        return (
+            <FoodHistory
+                userId={activeUser.id}
+                onBack={() => setView("dashboard")}
+            />
+        );
+    }
+
+    return (
+        <Dashboard
+            onOpenProfile={() => setView("profile")}
+            onOpenFoodHistory={() => setView("foodHistory")}
+            onUserChange={(id) => {
+                // Preparado para cuando Dashboard permita cambiar usuario
+                if (activeUser?.id === id) return;
+                setActiveUser((prev) => (prev && prev.id === id ? prev : { ...(prev as any), id })); // fallback
+            }}
+        />
+    );
 }

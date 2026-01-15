@@ -1,4 +1,4 @@
-package com.ginger.backend.api;
+package com.ginger.backend.controller;
 
 import com.ginger.backend.ai.MealAiService;
 import com.ginger.backend.api.dto.ParseMealRequest;

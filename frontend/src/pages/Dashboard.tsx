@@ -33,7 +33,15 @@ function fmt1(n?: number | null) {
     return (Math.round(n * 10) / 10).toFixed(1);
 }
 
-export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void }) {
+export default function Dashboard({
+                                      onOpenProfile,
+                                      onOpenFoodHistory,
+                                      onUserChange,
+                                  }: {
+    onOpenProfile: () => void;
+    onOpenFoodHistory: () => void;
+    onUserChange: (id: number) => void;
+}) {
     const [users, setUsers] = useState<UserDto[]>([]);
     const [userId, setUserId] = useState<number>(1);
     const [summary, setSummary] = useState<TodaySummaryDto | null>(null);
@@ -61,6 +69,8 @@ export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void
         refresh();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId]);
+
+
 
     const waterProgress = useMemo(() => {
         if (!summary) return null;
@@ -181,20 +191,20 @@ export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void
                                         <span className="text-muted-foreground">{fastingBadge}</span>
                                     </div>
 
-                                    <div className="flex items-center gap-2 rounded-2xl border bg-background/60 px-3 py-2">
-                                        <UserIcon className="h-4 w-4 text-muted-foreground" />
-                                        <select
-                                            className="h-9 rounded-md bg-transparent text-sm outline-none"
-                                            value={userId}
-                                            onChange={(e) => setUserId(Number(e.target.value))}
-                                        >
-                                            {users.map((u) => (
-                                                <option key={u.id} value={u.id}>
-                                                    {u.name} (id {u.id})
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
+                                    {/*<div className="flex items-center gap-2 rounded-2xl border bg-background/60 px-3 py-2">*/}
+                                    {/*    <UserIcon className="h-4 w-4 text-muted-foreground" />*/}
+                                    {/*    <select*/}
+                                    {/*        className="h-9 rounded-md bg-transparent text-sm outline-none"*/}
+                                    {/*        value={userId}*/}
+                                    {/*        onChange={(e) => setUserId(Number(e.target.value))}*/}
+                                    {/*    >*/}
+                                    {/*        {users.map((u) => (*/}
+                                    {/*            <option key={u.id} value={u.id}>*/}
+                                    {/*                {u.name} (id {u.id})*/}
+                                    {/*            </option>*/}
+                                    {/*        ))}*/}
+                                    {/*    </select>*/}
+                                    {/*</div>*/}
 
                                     <Button onClick={refresh} variant="secondary" disabled={loading} className="rounded-2xl">
                                         <RefreshCw className={["h-4 w-4 mr-2", loading ? "animate-spin" : ""].join(" ")} />
@@ -203,6 +213,10 @@ export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void
 
                                     <Button onClick={onOpenProfile} variant="secondary" className="rounded-2xl">
                                         Perfil
+                                    </Button>
+
+                                    <Button onClick={onOpenFoodHistory} variant="secondary" className="rounded-2xl">
+                                        Comidas
                                     </Button>
                                 </div>
                             </div>

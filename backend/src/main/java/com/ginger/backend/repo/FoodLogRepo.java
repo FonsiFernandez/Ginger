@@ -1,6 +1,8 @@
 package com.ginger.backend.repo;
 
 import com.ginger.backend.domain.FoodLog;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +14,8 @@ import java.util.Optional;
 public interface FoodLogRepo extends JpaRepository<FoodLog, Long> {
 
     List<FoodLog> findByUserIdAndEatenAtBetween(Long userId, Instant from, Instant to);
+
+    Page<FoodLog> findByUserIdOrderByEatenAtDesc(Long userId, Pageable pageable);
 
     @Query("""
     select coalesce(sum(f.calories), 0)
@@ -37,6 +41,6 @@ public interface FoodLogRepo extends JpaRepository<FoodLog, Long> {
     Optional<Double> sumSugarBetween(@Param("userId") Long userId,
                                      @Param("from") Instant from,
                                      @Param("to") Instant to);
-    
+
 }
 

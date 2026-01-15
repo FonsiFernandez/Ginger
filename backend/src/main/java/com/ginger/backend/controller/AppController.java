@@ -1,10 +1,13 @@
-package com.ginger.backend.api;
+package com.ginger.backend.controller;
 
+import com.ginger.backend.api.DtoMapper;
 import com.ginger.backend.api.dto.*;
 import com.ginger.backend.domain.*;
 import com.ginger.backend.repo.*;
 import com.ginger.backend.service.RecommendationsService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,6 +87,16 @@ public class AppController {
                 .build();
 
         return toDto(foodRepo.save(log));
+    }
+
+    @GetMapping("/food-logs")
+    public Page<FoodLogDto> listFoodLogs(
+            @RequestParam Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "25") int size
+    ) {
+        var p = foodRepo.findByUserIdOrderByEatenAtDesc(userId, PageRequest.of(page, size));
+        return p.map(DtoMapper::toDto);
     }
 
     // ---------------- Water ----------------

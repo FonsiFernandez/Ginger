@@ -70,3 +70,23 @@ export type HourCaloriesPoint = {
     calories: number;
 };
 
+export type FoodLogDto = {
+    id: number;
+    description: string;
+    eatenAt: string; // ISO date string
+    calories: number;
+    proteinG: number;
+    carbsG: number;
+    fatG: number;
+    sugarG?: number | null;
+};
+
+export type PageDto<T> = {
+    content: T[];
+    number: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    first: boolean;
+    last: boolean;
+};
