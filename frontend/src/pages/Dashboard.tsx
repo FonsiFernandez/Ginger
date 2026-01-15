@@ -15,11 +15,22 @@ import {
     Square,
     User as UserIcon,
     Candy,
+    Wheat,
 } from "lucide-react";
 
 function pct(value: number, target?: number | null) {
     if (!target || target <= 0) return null;
     return Math.max(0, Math.min(100, Math.round((value / target) * 100)));
+}
+
+function fmtInt(n?: number | null) {
+    if (n === null || n === undefined) return "—";
+    return String(Math.round(n));
+}
+
+function fmt1(n?: number | null) {
+    if (n === null || n === undefined) return "—";
+    return (Math.round(n * 10) / 10).toFixed(1);
 }
 
 export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void }) {
@@ -59,6 +70,22 @@ export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void
     const calorieProgress = useMemo(() => {
         if (!summary) return null;
         return pct(summary.consumed.calories, summary.targets.calorieTargetKcal);
+    }, [summary]);
+
+    const proteinProgress = useMemo(() => {
+        if (!summary) return null;
+        return pct(summary.consumed.proteinG, summary.targets.proteinTargetG);
+    }, [summary]);
+
+    const sugarProgress = useMemo(() => {
+        if (!summary) return null;
+        return pct(summary.consumed.sugarG, summary.targets.sugarLimitG);
+    }, [summary]);
+
+    const carbsProgress = useMemo(() => {
+        if (!summary) return null;
+        // @ts-ignore – si tu TodaySummaryDto ya tiene carbsGTarget tipado, quita este ignore
+        return pct(summary.consumed.carbsG, summary.targets.carbsGTarget ?? null);
     }, [summary]);
 
     async function addWater() {
@@ -120,8 +147,7 @@ export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void
     return (
         <div className="min-h-screen w-full bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.18),transparent_55%),radial-gradient(ellipse_at_top_right,rgba(34,197,94,0.14),transparent_50%),radial-gradient(ellipse_at_bottom_left,rgba(236,72,153,0.10),transparent_55%)]">
             <main className="w-full">
-                {/* CONTENEDOR CENTRADO (máximo razonable) */}
-                <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+                <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6 space-y-6">
                     {/* HERO */}
                     <div className="relative overflow-hidden rounded-3xl border bg-background/60 backdrop-blur-xl shadow-sm">
                         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-fuchsia-500/10 to-emerald-500/10" />
@@ -135,7 +161,7 @@ export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void
                                         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Ginger</h1>
                                     </div>
                                     <p className="text-sm text-muted-foreground">
-                                        Resumen diario: calorías, agua, ayuno y azúcar. Sencillo, rápido y claro.
+                                        Resumen diario: calorías, macros, ayuno y agua. Sencillo, rápido y claro.
                                     </p>
                                 </div>
 
@@ -174,6 +200,7 @@ export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void
                                         <RefreshCw className={["h-4 w-4 mr-2", loading ? "animate-spin" : ""].join(" ")} />
                                         Refrescar
                                     </Button>
+
                                     <Button onClick={onOpenProfile} variant="secondary" className="rounded-2xl">
                                         Perfil
                                     </Button>
@@ -188,7 +215,6 @@ export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void
                         </div>
                     </div>
 
-                    {/* GRID PRINCIPAL (mejor reparto en pantallas grandes) */}
                     <div className="grid gap-6 lg:grid-cols-12">
                         {/* TODAY */}
                         <Card className="lg:col-span-8 rounded-3xl border bg-background/60 backdrop-blur-xl shadow-sm">
@@ -216,25 +242,42 @@ export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void
                                             <ProgressBlock value={calorieProgress} />
                                         </Section>
 
-                                        {/* STATS */}
+                                        {/* MACROS (nuevo) */}
                                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                            <Stat
+                                            <MacroStat
                                                 label="Proteína"
                                                 value={`${Math.round(summary.consumed.proteinG)} g`}
+                                                sub={
+                                                    summary.targets.proteinTargetG
+                                                        ? `${Math.round(summary.consumed.proteinG)} / ${summary.targets.proteinTargetG} g`
+                                                        : undefined
+                                                }
+                                                badge={proteinProgress !== null ? `${proteinProgress}%` : undefined}
                                                 icon={<Leaf className="h-4 w-4" />}
                                                 accent="from-emerald-500/15 to-lime-500/10"
                                             />
-                                            <Stat
+
+                                            <MacroStat
+                                                label="Carbs"
+                                                value={`${Math.round(summary.consumed.carbsG)} g`}
+                                                // @ts-ignore
+                                                sub={summary.targets.carbsGTarget ? `${Math.round(summary.consumed.carbsG)} / ${Math.round(summary.targets.carbsGTarget)} g` : "estimado"}
+                                                badge={carbsProgress !== null ? `${carbsProgress}%` : "est."}
+                                                icon={<Wheat className="h-4 w-4" />}
+                                                accent="from-sky-500/15 to-indigo-500/10"
+                                            />
+
+                                            <MacroStat
                                                 label="Azúcar"
                                                 value={`${Math.round(summary.consumed.sugarG)} g`}
+                                                sub={
+                                                    summary.targets.sugarLimitG
+                                                        ? `${Math.round(summary.consumed.sugarG)} / ${summary.targets.sugarLimitG} g`
+                                                        : undefined
+                                                }
+                                                badge={sugarProgress !== null ? `${sugarProgress}%` : undefined}
                                                 icon={<Candy className="h-4 w-4" />}
                                                 accent="from-fuchsia-500/15 to-pink-500/10"
-                                            />
-                                            <Stat
-                                                label="Agua"
-                                                value={`${summary.consumed.waterMl} ml`}
-                                                icon={<Droplets className="h-4 w-4" />}
-                                                accent="from-sky-500/15 to-indigo-500/10"
                                             />
                                         </div>
 
@@ -310,12 +353,7 @@ export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void
                                         placeholder="Ej: arroz con pollo y ensalada"
                                     />
 
-                                    <Button
-                                        onClick={logMealAi}
-                                        disabled={loading}
-                                        variant="secondary"
-                                        className="w-full rounded-2xl"
-                                    >
+                                    <Button onClick={logMealAi} disabled={loading} variant="secondary" className="w-full rounded-2xl">
                                         <Sparkles className="h-4 w-4 mr-2" />
                                         Parsear y guardar
                                     </Button>
@@ -428,32 +466,37 @@ function Pill({ children, className = "" }: { children: React.ReactNode; classNa
     );
 }
 
-function Stat({
-                  label,
-                  value,
-                  icon,
-                  accent,
-              }: {
+function MacroStat({
+                       label,
+                       value,
+                       sub,
+                       icon,
+                       accent,
+                       badge,
+                   }: {
     label: string;
     value: string;
+    sub?: string;
     icon: React.ReactNode;
     accent: string;
+    badge?: string;
 }) {
     return (
         <div className="rounded-2xl border bg-background/60 p-4 shadow-sm">
-            <div className="flex items-center justify-between">
-                <div className="text-xs text-muted-foreground">{label}</div>
-                <div
-                    className={[
-                        "h-8 w-8 rounded-2xl border bg-gradient-to-br",
-                        accent,
-                        "flex items-center justify-center",
-                    ].join(" ")}
-                >
-                    {icon}
+            <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                    <div className="text-xs text-muted-foreground">{label}</div>
+                    <div className="text-2xl font-semibold tracking-tight">{value}</div>
+                    {sub ? <div className="text-xs text-muted-foreground">{sub}</div> : null}
+                </div>
+
+                <div className="flex flex-col items-end gap-2">
+                    <div className={["h-8 w-8 rounded-2xl border bg-gradient-to-br", accent, "flex items-center justify-center"].join(" ")}>
+                        {icon}
+                    </div>
+                    {badge ? <Pill>{badge}</Pill> : null}
                 </div>
             </div>
-            <div className="mt-2 text-2xl font-semibold tracking-tight">{value}</div>
         </div>
     );
 }

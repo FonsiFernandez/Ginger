@@ -4,5 +4,7 @@ public record DailyProgressDto(
         double calories,
         double proteinG,
         double sugarG,
-        int waterMl
+        int waterMl,
+        double carbsG
+
 ) {}

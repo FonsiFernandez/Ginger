@@ -4,5 +4,6 @@ public record DailyTargetsDto(
         Integer calorieTargetKcal,
         Integer proteinTargetG,
         Integer sugarLimitG,
-        Integer waterGoalMl
+        Integer waterGoalMl,
+        Double carbsGTarget
 ) {}
