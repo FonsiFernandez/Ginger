@@ -17,6 +17,7 @@ import {
     Candy,
     Wheat,
 } from "lucide-react";
+import {RecommendationBanner} from "@/components/RecommendationBanner.tsx";
 
 function pct(value: number, target?: number | null) {
     if (!target || target <= 0) return null;
@@ -242,6 +243,7 @@ export default function Dashboard({
                             </CardHeader>
 
                             <CardContent className="space-y-6">
+                                <RecommendationBanner userId={userId} />
                                 {summary ? (
                                     <>
                                         {/* CALORIES */}

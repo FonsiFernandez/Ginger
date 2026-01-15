@@ -90,3 +90,9 @@ export type PageDto<T> = {
     first: boolean;
     last: boolean;
 };
+
+type TodayRecommendationsDto = {
+    userId: number;
+    date: string;
+    messages: string[];
+};
