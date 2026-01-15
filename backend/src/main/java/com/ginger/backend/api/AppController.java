@@ -3,6 +3,7 @@ package com.ginger.backend.api;
 import com.ginger.backend.api.dto.*;
 import com.ginger.backend.domain.*;
 import com.ginger.backend.repo.*;
+import com.ginger.backend.service.RecommendationsService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.time.*;
 import java.util.List;
 
 import static com.ginger.backend.api.DtoMapper.*;
+import static com.ginger.backend.service.RecommendationsService.buildFastingSuggestion;
 
 @RestController
 @RequestMapping("/api")
@@ -20,12 +22,14 @@ public class AppController {
     private final FoodLogRepo foodRepo;
     private final WaterLogRepo waterRepo;
     private final FastingSessionRepo fastingRepo;
+    private final RecommendationsService recService;
 
-    public AppController(UserProfileRepo userRepo, FoodLogRepo foodRepo, WaterLogRepo waterRepo, FastingSessionRepo fastingRepo) {
+    public AppController(UserProfileRepo userRepo, FoodLogRepo foodRepo, WaterLogRepo waterRepo, FastingSessionRepo fastingRepo, RecommendationsService recService) {
         this.userRepo = userRepo;
         this.foodRepo = foodRepo;
         this.waterRepo = waterRepo;
         this.fastingRepo = fastingRepo;
+        this.recService = recService;
     }
 
     // ---------------- Users ----------------
@@ -153,23 +157,6 @@ public class AppController {
         );
     }
 
-    private static String buildFastingSuggestion(String protocol, long minutesFasted) {
-        // sugerencias generales (sin medicalizar)
-        if (minutesFasted < 60) {
-            return "Buen inicio. Mantente hidratado (agua, café/té sin azúcar) y evita calorías.";
-        }
-        if (minutesFasted < 8 * 60) {
-            return "Vas bien. Prioriza hidratación; si entrenas, baja intensidad si lo necesitas.";
-        }
-        if (minutesFasted < 12 * 60) {
-            return "Ya estás en una ventana común de ayuno. Si tienes hambre, agua con gas o infusiones pueden ayudar.";
-        }
-        if (minutesFasted < 16 * 60) {
-            return "Cerca de una ventana 16h. Cuando rompas el ayuno, empieza con algo ligero y proteína.";
-        }
-        return "Ventana larga. Si rompes el ayuno, evita un atracón: proteína + fibra + algo de grasa saludable.";
-    }
-
     // ---------------- Summary (Today) ----------------
 
     @GetMapping("/summary/today")
@@ -189,7 +176,7 @@ public class AppController {
 
         return new TodaySummaryDto(
                 userId,
-                LocalDate.now().toString(),
+                LocalDate.now(ZoneId.systemDefault()).toString(),
                 caloriesToday,
                 waterMlToday,
                 goal,
@@ -197,5 +184,12 @@ public class AppController {
                 activeFasting.map(FastingSession::getProtocol).orElse(null),
                 activeFasting.map(FastingSession::getId).orElse(null)
         );
+    }
+
+    // ---------------- Recommendations ----------------
+
+    @GetMapping("/recommendations/today")
+    public TodayRecommendationsDto todayRecommendations(@RequestParam Long userId) {
+        return recService.today(userId);
     }
 }
