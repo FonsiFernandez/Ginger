@@ -18,5 +18,5 @@ public interface WaterLogRepo extends JpaRepository<WaterLog, Long> {
     where w.user.id = :userId and w.drankAt between :from and :to
   """)
     Optional<Integer> sumWaterBetween(@Param("userId") Long userId, @Param("from") Instant from, @Param("to") Instant to);
-
+    
 }

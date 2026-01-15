@@ -52,3 +52,21 @@ export type OnboardingRequest = {
     goalPace: GoalPace;
 };
 
+export type WeightLogDto = {
+    id: number;
+    userId: number;
+    weightKg: number;
+    createdAt: string;
+};
+
+export type DailyTotalsPoint = {
+    date: string;      // "YYYY-MM-DD"
+    calories: number;
+    waterMl: number;
+};
+
+export type HourCaloriesPoint = {
+    hour: number;      // 0-23
+    calories: number;
+};
+

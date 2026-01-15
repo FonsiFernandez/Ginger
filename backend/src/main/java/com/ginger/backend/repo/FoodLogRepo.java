@@ -37,6 +37,6 @@ public interface FoodLogRepo extends JpaRepository<FoodLog, Long> {
     Optional<Double> sumSugarBetween(@Param("userId") Long userId,
                                      @Param("from") Instant from,
                                      @Param("to") Instant to);
-
+    
 }
 
