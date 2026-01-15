@@ -22,7 +22,7 @@ function pct(value: number, target?: number | null) {
     return Math.max(0, Math.min(100, Math.round((value / target) * 100)));
 }
 
-export default function Dashboard() {
+export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void }) {
     const [users, setUsers] = useState<UserDto[]>([]);
     const [userId, setUserId] = useState<number>(1);
     const [summary, setSummary] = useState<TodaySummaryDto | null>(null);
@@ -173,6 +173,9 @@ export default function Dashboard() {
                                     <Button onClick={refresh} variant="secondary" disabled={loading} className="rounded-2xl">
                                         <RefreshCw className={["h-4 w-4 mr-2", loading ? "animate-spin" : ""].join(" ")} />
                                         Refrescar
+                                    </Button>
+                                    <Button onClick={onOpenProfile} variant="secondary" className="rounded-2xl">
+                                        Perfil
                                     </Button>
                                 </div>
                             </div>
