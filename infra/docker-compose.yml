@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: ginger_db
+    environment:
+      POSTGRES_DB: ginger
+      POSTGRES_USER: ginger_user
+      POSTGRES_PASSWORD: ginger_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ginger_pgdata:/var/lib/postgresql/data
+
+volumes:
+  ginger_pgdata:
