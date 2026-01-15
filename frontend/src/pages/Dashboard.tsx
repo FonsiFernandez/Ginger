@@ -121,7 +121,7 @@ export default function Dashboard({ onOpenProfile }: { onOpenProfile: () => void
         <div className="min-h-screen w-full bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.18),transparent_55%),radial-gradient(ellipse_at_top_right,rgba(34,197,94,0.14),transparent_50%),radial-gradient(ellipse_at_bottom_left,rgba(236,72,153,0.10),transparent_55%)]">
             <main className="w-full">
                 {/* CONTENEDOR CENTRADO (máximo razonable) */}
-                <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+                <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-6 space-y-6">
                     {/* HERO */}
                     <div className="relative overflow-hidden rounded-3xl border bg-background/60 backdrop-blur-xl shadow-sm">
                         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-fuchsia-500/10 to-emerald-500/10" />
