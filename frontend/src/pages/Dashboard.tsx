@@ -118,239 +118,255 @@ export default function Dashboard() {
         : "Sin ayuno activo";
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.18),transparent_55%),radial-gradient(ellipse_at_top_right,rgba(34,197,94,0.14),transparent_50%),radial-gradient(ellipse_at_bottom_left,rgba(236,72,153,0.10),transparent_55%)]">
-            <div className="mx-auto p-6 space-y-6">
-                {/* HERO */}
-                <div className="relative overflow-hidden rounded-3xl border bg-background/60 backdrop-blur-xl shadow-sm">
-                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-fuchsia-500/10 to-emerald-500/10" />
-                    <div className="relative p-6 md:p-8 flex flex-col gap-5">
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                            <div className="space-y-1">
-                                <div className="flex items-center gap-2">
-                                    <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/20 via-fuchsia-500/20 to-emerald-500/20 border">
-                                        <Sparkles className="h-4 w-4" />
+        <div className="min-h-screen w-full bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.18),transparent_55%),radial-gradient(ellipse_at_top_right,rgba(34,197,94,0.14),transparent_50%),radial-gradient(ellipse_at_bottom_left,rgba(236,72,153,0.10),transparent_55%)]">
+            <main className="w-full">
+                {/* CONTENEDOR CENTRADO (máximo razonable) */}
+                <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+                    {/* HERO */}
+                    <div className="relative overflow-hidden rounded-3xl border bg-background/60 backdrop-blur-xl shadow-sm">
+                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-fuchsia-500/10 to-emerald-500/10" />
+                        <div className="relative p-6 md:p-8 flex flex-col gap-5">
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2">
+                                        <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/20 via-fuchsia-500/20 to-emerald-500/20 border">
+                                            <Sparkles className="h-4 w-4" />
+                                        </div>
+                                        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Ginger</h1>
                                     </div>
-                                    <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Ginger</h1>
-                                </div>
-                                <p className="text-sm text-muted-foreground">
-                                    Resumen diario: calorías, agua, ayuno y azúcar. Sencillo, rápido y claro.
-                                </p>
-                            </div>
-
-                            <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-                                <div
-                                    className={[
-                                        "inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm bg-background/60",
-                                        summary?.fastingActive ? "border-emerald-500/30" : "border-muted",
-                                    ].join(" ")}
-                                >
-                                    <Leaf className={["h-4 w-4", summary?.fastingActive ? "text-emerald-600" : "text-muted-foreground"].join(" ")} />
-                                    <span className="text-muted-foreground">{fastingBadge}</span>
+                                    <p className="text-sm text-muted-foreground">
+                                        Resumen diario: calorías, agua, ayuno y azúcar. Sencillo, rápido y claro.
+                                    </p>
                                 </div>
 
-                                <div className="flex items-center gap-2 rounded-2xl border bg-background/60 px-3 py-2">
-                                    <UserIcon className="h-4 w-4 text-muted-foreground" />
-                                    <select
-                                        className="h-9 rounded-md bg-transparent text-sm outline-none"
-                                        value={userId}
-                                        onChange={(e) => setUserId(Number(e.target.value))}
+                                <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+                                    <div
+                                        className={[
+                                            "inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm bg-background/60",
+                                            summary?.fastingActive ? "border-emerald-500/30" : "border-muted",
+                                        ].join(" ")}
                                     >
-                                        {users.map((u) => (
-                                            <option key={u.id} value={u.id}>
-                                                {u.name} (id {u.id})
-                                            </option>
-                                        ))}
-                                    </select>
+                                        <Leaf
+                                            className={[
+                                                "h-4 w-4",
+                                                summary?.fastingActive ? "text-emerald-600" : "text-muted-foreground",
+                                            ].join(" ")}
+                                        />
+                                        <span className="text-muted-foreground">{fastingBadge}</span>
+                                    </div>
+
+                                    <div className="flex items-center gap-2 rounded-2xl border bg-background/60 px-3 py-2">
+                                        <UserIcon className="h-4 w-4 text-muted-foreground" />
+                                        <select
+                                            className="h-9 rounded-md bg-transparent text-sm outline-none"
+                                            value={userId}
+                                            onChange={(e) => setUserId(Number(e.target.value))}
+                                        >
+                                            {users.map((u) => (
+                                                <option key={u.id} value={u.id}>
+                                                    {u.name} (id {u.id})
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <Button onClick={refresh} variant="secondary" disabled={loading} className="rounded-2xl">
+                                        <RefreshCw className={["h-4 w-4 mr-2", loading ? "animate-spin" : ""].join(" ")} />
+                                        Refrescar
+                                    </Button>
+                                </div>
+                            </div>
+
+                            {err ? (
+                                <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                                    {err}
+                                </div>
+                            ) : null}
+                        </div>
+                    </div>
+
+                    {/* GRID PRINCIPAL (mejor reparto en pantallas grandes) */}
+                    <div className="grid gap-6 lg:grid-cols-12">
+                        {/* TODAY */}
+                        <Card className="lg:col-span-8 rounded-3xl border bg-background/60 backdrop-blur-xl shadow-sm">
+                            <CardHeader className="pb-2">
+                                <CardTitle className="flex items-center gap-2">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/15 to-rose-500/15 border">
+                    <Flame className="h-4 w-4" />
+                  </span>
+                                    Hoy
+                                </CardTitle>
+                            </CardHeader>
+
+                            <CardContent className="space-y-6">
+                                {summary ? (
+                                    <>
+                                        {/* CALORIES */}
+                                        <Section
+                                            title="Calorías"
+                                            right={`${Math.round(summary.consumed.calories)}${
+                                                summary.targets.calorieTargetKcal ? ` / ${summary.targets.calorieTargetKcal}` : ""
+                                            }`}
+                                            icon={<Flame className="h-4 w-4" />}
+                                            badge={calorieProgress !== null ? `${calorieProgress}%` : undefined}
+                                        >
+                                            <ProgressBlock value={calorieProgress} />
+                                        </Section>
+
+                                        {/* STATS */}
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                            <Stat
+                                                label="Proteína"
+                                                value={`${Math.round(summary.consumed.proteinG)} g`}
+                                                icon={<Leaf className="h-4 w-4" />}
+                                                accent="from-emerald-500/15 to-lime-500/10"
+                                            />
+                                            <Stat
+                                                label="Azúcar"
+                                                value={`${Math.round(summary.consumed.sugarG)} g`}
+                                                icon={<Candy className="h-4 w-4" />}
+                                                accent="from-fuchsia-500/15 to-pink-500/10"
+                                            />
+                                            <Stat
+                                                label="Agua"
+                                                value={`${summary.consumed.waterMl} ml`}
+                                                icon={<Droplets className="h-4 w-4" />}
+                                                accent="from-sky-500/15 to-indigo-500/10"
+                                            />
+                                        </div>
+
+                                        {/* WATER */}
+                                        <Section
+                                            title="Agua"
+                                            right={`${summary.consumed.waterMl}${
+                                                summary.targets.waterGoalMl ? ` / ${summary.targets.waterGoalMl} ml` : " ml"
+                                            }`}
+                                            icon={<Droplets className="h-4 w-4" />}
+                                            badge={waterProgress !== null ? `${waterProgress}%` : undefined}
+                                        >
+                                            <ProgressBlock value={waterProgress} />
+                                        </Section>
+                                    </>
+                                ) : (
+                                    <div className="text-sm text-muted-foreground">Cargando…</div>
+                                )}
+                            </CardContent>
+                        </Card>
+
+                        {/* QUICK ACTIONS */}
+                        <Card className="lg:col-span-4 rounded-3xl border bg-background/60 backdrop-blur-xl shadow-sm">
+                            <CardHeader className="pb-2">
+                                <CardTitle className="flex items-center gap-2">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/15 to-fuchsia-500/10 border">
+                    <Sparkles className="h-4 w-4" />
+                  </span>
+                                    Acciones rápidas
+                                </CardTitle>
+                            </CardHeader>
+
+                            <CardContent className="space-y-5">
+                                {/* WATER ACTION */}
+                                <div className="rounded-2xl border bg-background/50 p-4 space-y-3">
+                                    <div className="flex items-center justify-between">
+                                        <div className="text-sm font-medium flex items-center gap-2">
+                                            <Droplets className="h-4 w-4 text-sky-600" />
+                                            Añadir agua
+                                        </div>
+                                        <Pill>ml</Pill>
+                                    </div>
+
+                                    <div className="flex gap-2">
+                                        <Input
+                                            type="number"
+                                            value={waterMl}
+                                            onChange={(e) => setWaterMl(Number(e.target.value))}
+                                            placeholder="ml"
+                                            className="rounded-2xl"
+                                        />
+                                        <Button onClick={addWater} variant="secondary" disabled={loading} className="rounded-2xl">
+                                            <Droplets className="h-4 w-4 mr-2" />
+                                            Añadir
+                                        </Button>
+                                    </div>
                                 </div>
 
-                                <Button onClick={refresh} variant="secondary" disabled={loading} className="rounded-2xl">
-                                    <RefreshCw className={["h-4 w-4 mr-2", loading ? "animate-spin" : ""].join(" ")} />
-                                    Refrescar
-                                </Button>
-                            </div>
-                        </div>
+                                {/* AI MEAL */}
+                                <div className="rounded-2xl border bg-background/50 p-4 space-y-3">
+                                    <div className="flex items-center justify-between">
+                                        <div className="text-sm font-medium flex items-center gap-2">
+                                            <Sparkles className="h-4 w-4 text-fuchsia-600" />
+                                            Registrar comida (IA)
+                                        </div>
+                                        <Pill>texto</Pill>
+                                    </div>
 
-                        {err ? (
-                            <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                                {err}
-                            </div>
-                        ) : null}
+                                    <Input
+                                        value={mealText}
+                                        onChange={(e) => setMealText(e.target.value)}
+                                        className="rounded-2xl"
+                                        placeholder="Ej: arroz con pollo y ensalada"
+                                    />
+
+                                    <Button
+                                        onClick={logMealAi}
+                                        disabled={loading}
+                                        variant="secondary"
+                                        className="w-full rounded-2xl"
+                                    >
+                                        <Sparkles className="h-4 w-4 mr-2" />
+                                        Parsear y guardar
+                                    </Button>
+                                </div>
+
+                                {/* FASTING */}
+                                <div className="rounded-2xl border bg-background/50 p-4 space-y-3">
+                                    <div className="flex items-center justify-between">
+                                        <div className="text-sm font-medium flex items-center gap-2">
+                                            <Leaf className="h-4 w-4 text-emerald-600" />
+                                            Ayuno
+                                        </div>
+                                        <Pill>16:8</Pill>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <Button
+                                            onClick={startFasting}
+                                            variant="secondary"
+                                            disabled={loading || summary?.fastingActive}
+                                            className="rounded-2xl"
+                                        >
+                                            <Play className="h-4 w-4 mr-2" />
+                                            Start
+                                        </Button>
+                                        <Button
+                                            onClick={stopFasting}
+                                            variant="secondary"
+                                            disabled={loading || !summary?.fastingActive}
+                                            className="rounded-2xl"
+                                        >
+                                            <Square className="h-4 w-4 mr-2" />
+                                            Stop
+                                        </Button>
+                                    </div>
+
+                                    {summary?.fastingActive ? (
+                                        <div className="text-sm text-muted-foreground">
+                                            Activo: <span className="font-medium">{summary.fastingProtocol ?? "custom"}</span>{" "}
+                                            <span className="text-xs">(id {summary.activeFastingId})</span>
+                                        </div>
+                                    ) : (
+                                        <div className="text-sm text-muted-foreground">No hay ayuno activo.</div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    <div className="text-xs text-muted-foreground">
+                        Backend: {import.meta.env.VITE_API_BASE ?? "http://localhost:8081/api"}
                     </div>
                 </div>
-
-                <div className="grid gap-6 lg:grid-cols-3">
-                    {/* TODAY */}
-                    <Card className="lg:col-span-2 rounded-3xl border bg-background/60 backdrop-blur-xl shadow-sm">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="flex items-center gap-2">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/15 to-rose-500/15 border">
-                  <Flame className="h-4 w-4" />
-                </span>
-                                Hoy
-                            </CardTitle>
-                        </CardHeader>
-
-                        <CardContent className="space-y-6">
-                            {summary ? (
-                                <>
-                                    {/* CALORIES */}
-                                    <Section
-                                        title="Calorías"
-                                        right={`${Math.round(summary.consumed.calories)}${
-                                            summary.targets.calorieTargetKcal ? ` / ${summary.targets.calorieTargetKcal}` : ""
-                                        }`}
-                                        icon={<Flame className="h-4 w-4" />}
-                                        badge={calorieProgress !== null ? `${calorieProgress}%` : undefined}
-                                    >
-                                        <ProgressBlock value={calorieProgress} />
-                                    </Section>
-
-                                    {/* STATS */}
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                        <Stat
-                                            label="Proteína"
-                                            value={`${Math.round(summary.consumed.proteinG)} g`}
-                                            icon={<Leaf className="h-4 w-4" />}
-                                            accent="from-emerald-500/15 to-lime-500/10"
-                                        />
-                                        <Stat
-                                            label="Azúcar"
-                                            value={`${Math.round(summary.consumed.sugarG)} g`}
-                                            icon={<Candy className="h-4 w-4" />}
-                                            accent="from-fuchsia-500/15 to-pink-500/10"
-                                        />
-                                        <Stat
-                                            label="Agua"
-                                            value={`${summary.consumed.waterMl} ml`}
-                                            icon={<Droplets className="h-4 w-4" />}
-                                            accent="from-sky-500/15 to-indigo-500/10"
-                                        />
-                                    </div>
-
-                                    {/* WATER */}
-                                    <Section
-                                        title="Agua"
-                                        right={`${summary.consumed.waterMl}${summary.targets.waterGoalMl ? ` / ${summary.targets.waterGoalMl} ml` : " ml"}`}
-                                        icon={<Droplets className="h-4 w-4" />}
-                                        badge={waterProgress !== null ? `${waterProgress}%` : undefined}
-                                    >
-                                        <ProgressBlock value={waterProgress} />
-                                    </Section>
-                                </>
-                            ) : (
-                                <div className="text-sm text-muted-foreground">Cargando…</div>
-                            )}
-                        </CardContent>
-                    </Card>
-
-                    {/* QUICK ACTIONS */}
-                    <Card className="rounded-3xl border bg-background/60 backdrop-blur-xl shadow-sm">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="flex items-center gap-2">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/15 to-fuchsia-500/10 border">
-                  <Sparkles className="h-4 w-4" />
-                </span>
-                                Acciones rápidas
-                            </CardTitle>
-                        </CardHeader>
-
-                        <CardContent className="space-y-5">
-                            {/* WATER ACTION */}
-                            <div className="rounded-2xl border bg-background/50 p-4 space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <div className="text-sm font-medium flex items-center gap-2">
-                                        <Droplets className="h-4 w-4 text-sky-600" />
-                                        Añadir agua
-                                    </div>
-                                    <Pill>ml</Pill>
-                                </div>
-
-                                <div className="flex gap-2">
-                                    <Input
-                                        type="number"
-                                        value={waterMl}
-                                        onChange={(e) => setWaterMl(Number(e.target.value))}
-                                        placeholder="ml"
-                                        className="rounded-2xl"
-                                    />
-                                    <Button onClick={addWater}  variant="secondary" disabled={loading} className="rounded-2xl">
-                                        <Droplets className="h-4 w-4 mr-2" />
-                                        Añadir
-                                    </Button>
-                                </div>
-                            </div>
-
-                            {/* AI MEAL */}
-                            <div className="rounded-2xl border bg-background/50 p-4 space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <div className="text-sm font-medium flex items-center gap-2">
-                                        <Sparkles className="h-4 w-4 text-fuchsia-600" />
-                                        Registrar comida (IA)
-                                    </div>
-                                    <Pill>texto</Pill>
-                                </div>
-
-                                <Input
-                                    value={mealText}
-                                    onChange={(e) => setMealText(e.target.value)}
-                                    className="rounded-2xl"
-                                    placeholder="Ej: arroz con pollo y ensalada"
-                                />
-
-                                <Button onClick={logMealAi} disabled={loading}  variant="secondary" className="w-full rounded-2xl">
-                                    <Sparkles className="h-4 w-4 mr-2" />
-                                    Parsear y guardar
-                                </Button>
-                            </div>
-
-                            {/* FASTING */}
-                            <div className="rounded-2xl border bg-background/50 p-4 space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <div className="text-sm font-medium flex items-center gap-2">
-                                        <Leaf className="h-4 w-4 text-emerald-600" />
-                                        Ayuno
-                                    </div>
-                                    <Pill>16:8</Pill>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-2">
-                                    <Button
-                                        onClick={startFasting}
-                                        variant="secondary"
-                                        disabled={loading || summary?.fastingActive}
-                                        className="rounded-2xl"
-                                    >
-                                        <Play className="h-4 w-4 mr-2" />
-                                        Start
-                                    </Button>
-                                    <Button
-                                        onClick={stopFasting}
-                                        variant="secondary"
-                                        disabled={loading || !summary?.fastingActive}
-                                        className="rounded-2xl"
-                                    >
-                                        <Square className="h-4 w-4 mr-2" />
-                                        Stop
-                                    </Button>
-                                </div>
-
-                                {summary?.fastingActive ? (
-                                    <div className="text-sm text-muted-foreground">
-                                        Activo: <span className="font-medium">{summary.fastingProtocol ?? "custom"}</span>{" "}
-                                        <span className="text-xs">(id {summary.activeFastingId})</span>
-                                    </div>
-                                ) : (
-                                    <div className="text-sm text-muted-foreground">No hay ayuno activo.</div>
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-
-                <div className="text-xs text-muted-foreground">
-                    Backend: {import.meta.env.VITE_API_BASE ?? "http://localhost:8081/api"}
-                </div>
-            </div>
+            </main>
         </div>
     );
 }
@@ -424,7 +440,13 @@ function Stat({
         <div className="rounded-2xl border bg-background/60 p-4 shadow-sm">
             <div className="flex items-center justify-between">
                 <div className="text-xs text-muted-foreground">{label}</div>
-                <div className={["h-8 w-8 rounded-2xl border bg-gradient-to-br", accent, "flex items-center justify-center"].join(" ")}>
+                <div
+                    className={[
+                        "h-8 w-8 rounded-2xl border bg-gradient-to-br",
+                        accent,
+                        "flex items-center justify-center",
+                    ].join(" ")}
+                >
                     {icon}
                 </div>
             </div>
