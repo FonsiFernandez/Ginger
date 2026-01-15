@@ -36,3 +36,19 @@ export type UserDto = {
     waterGoalMl?: number | null;
     fastingDefaultHours?: number | null;
 };
+
+export type Sex = "MALE" | "FEMALE";
+export type ActivityLevel = "SEDENTARY" | "LIGHT" | "MODERATE" | "HIGH" | "VERY_HIGH";
+export type Goal = "LOSE" | "MAINTAIN" | "GAIN";
+export type GoalPace = "MILD" | "MEDIUM" | "AGGRESSIVE";
+
+export type OnboardingRequest = {
+    age: number;
+    sex: Sex;
+    heightCm: number;
+    weightKg: number;
+    activityLevel: ActivityLevel;
+    goal: Goal;
+    goalPace: GoalPace;
+};
+
