@@ -52,6 +52,20 @@ public class AppController {
         return toDto(userRepo.save(u));
     }
 
+    @PostMapping("/goals")
+    public UserDto updateGoals(@Valid @RequestBody UpdateGoalsRequest req) {
+        var user = userRepo.findById(req.userId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (req.goalMode() != null) user.setGoalMode(req.goalMode());
+        if (req.calorieTargetKcal() != null) user.setCalorieTargetKcal(req.calorieTargetKcal());
+        if (req.proteinTargetG() != null) user.setProteinTargetG(req.proteinTargetG());
+        if (req.sugarLimitG() != null) user.setSugarLimitG(req.sugarLimitG());
+        if (req.waterGoalMl() != null) user.setWaterGoalMl(req.waterGoalMl());
+        if (req.fastingDefaultHours() != null) user.setFastingDefaultHours(req.fastingDefaultHours());
+
+        return toDto(userRepo.save(user));
+    }
+
     // ---------------- Food ----------------
 
     @PostMapping("/food")
@@ -163,28 +177,46 @@ public class AppController {
     public TodaySummaryDto todaySummary(@RequestParam Long userId) {
         var user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        var todayStart = LocalDate.now(ZoneId.systemDefault()).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        var now = Instant.now();
+        ZoneId zone = ZoneId.systemDefault();
+        Instant todayStart = LocalDate.now(zone).atStartOfDay(zone).toInstant();
+        Instant now = Instant.now();
 
         double caloriesToday = foodRepo.sumCaloriesBetween(userId, todayStart, now).orElse(0.0);
+        double proteinToday = foodRepo.sumProteinBetween(userId, todayStart, now).orElse(0.0);
+        double sugarToday = foodRepo.sumSugarBetween(userId, todayStart, now).orElse(0.0);
+
         int waterMlToday = waterRepo.sumWaterBetween(userId, todayStart, now).orElse(0);
+
+        Integer waterGoal = user.getWaterGoalMl();
+        if (waterGoal == null) waterGoal = 2000;
+
+        DailyTargetsDto targets = new DailyTargetsDto(
+                user.getCalorieTargetKcal(),
+                user.getProteinTargetG(),
+                user.getSugarLimitG(),
+                waterGoal
+        );
+
+        DailyProgressDto consumed = new DailyProgressDto(
+                caloriesToday,
+                proteinToday,
+                sugarToday,
+                waterMlToday
+        );
 
         var activeFasting = fastingRepo.findFirstByUserIdAndEndedAtIsNullOrderByStartedAtDesc(userId);
 
-        Integer goal = user.getWaterGoalMl();
-        if (goal == null) goal = 2000;
-
         return new TodaySummaryDto(
                 userId,
-                LocalDate.now(ZoneId.systemDefault()).toString(),
-                caloriesToday,
-                waterMlToday,
-                goal,
+                LocalDate.now(zone).toString(),
+                targets,
+                consumed,
                 activeFasting.isPresent(),
                 activeFasting.map(FastingSession::getProtocol).orElse(null),
                 activeFasting.map(FastingSession::getId).orElse(null)
         );
     }
+
 
     // ---------------- Recommendations ----------------
 

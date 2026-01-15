@@ -47,6 +47,7 @@ public class MealAiService {
         "totalProteinG": number,
         "totalCarbsG": number,
         "totalFatG": number,
+        "totalSugarG": number,
         "items": [
           {
             "name": string,
@@ -55,14 +56,16 @@ public class MealAiService {
             "proteinG": number,
             "carbsG": number,
             "fatG": number
+            "sugarG": number
           }
         ]
       }
 
-      Rules:
-      - If quantities are missing, make reasonable assumptions and set quantity as a human-friendly string.
-      - Totals must approximately match the sum of items (rounding OK).
-      - Do not add extra keys.
+        Rules:
+        - If quantities are missing, make reasonable assumptions and set quantity as a human-friendly string.
+        - Totals must approximately match the sum of items (rounding OK).
+        - Sugar is included in carbs (do not exceed totalCarbsG by a lot).
+        - Do not add extra keys.
 
       User meal text: "%s"
     """.formatted(text.replace("\"", "'"));
@@ -80,6 +83,7 @@ public class MealAiService {
             double totalProtein = json.path("totalProteinG").asDouble(0);
             double totalCarbs = json.path("totalCarbsG").asDouble(0);
             double totalFat = json.path("totalFatG").asDouble(0);
+            double totalSugar = json.path("totalSugarG").asDouble(0);
 
             List<MealItemDto> items = new ArrayList<>();
             JsonNode itemsNode = json.path("items");
@@ -91,7 +95,8 @@ public class MealAiService {
                             i.path("calories").isNumber() ? i.path("calories").asDouble() : null,
                             i.path("proteinG").isNumber() ? i.path("proteinG").asDouble() : null,
                             i.path("carbsG").isNumber() ? i.path("carbsG").asDouble() : null,
-                            i.path("fatG").isNumber() ? i.path("fatG").asDouble() : null
+                            i.path("fatG").isNumber() ? i.path("fatG").asDouble() : null,
+                            i.path("sugarG").isNumber() ? i.path("sugarG").asDouble() : null
                     ));
                 }
             }
@@ -102,6 +107,7 @@ public class MealAiService {
                     totalProtein,
                     totalCarbs,
                     totalFat,
+                    totalSugar,
                     items
             );
 
@@ -134,6 +140,7 @@ public class MealAiService {
                 .proteinG(ai.totalProteinG())
                 .carbsG(ai.totalCarbsG())
                 .fatG(ai.totalFatG())
+                .sugarG(ai.totalSugarG())
                 .build();
 
         FoodLog saved = foodRepo.save(log);

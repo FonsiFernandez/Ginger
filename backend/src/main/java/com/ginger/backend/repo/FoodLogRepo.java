@@ -20,5 +20,23 @@ public interface FoodLogRepo extends JpaRepository<FoodLog, Long> {
   """)
     Optional<Double> sumCaloriesBetween(@Param("userId") Long userId, @Param("from") Instant from, @Param("to") Instant to);
 
+    @Query("""
+  select sum(coalesce(f.proteinG, 0))
+  from FoodLog f
+  where f.user.id = :userId and f.eatenAt between :from and :to
+""")
+    Optional<Double> sumProteinBetween(@Param("userId") Long userId,
+                                       @Param("from") Instant from,
+                                       @Param("to") Instant to);
+
+    @Query("""
+  select sum(coalesce(f.sugarG, 0))
+  from FoodLog f
+  where f.user.id = :userId and f.eatenAt between :from and :to
+""")
+    Optional<Double> sumSugarBetween(@Param("userId") Long userId,
+                                     @Param("from") Instant from,
+                                     @Param("to") Instant to);
+
 }
 

@@ -26,6 +26,11 @@ public class UserProfile {
     private Double heightCm;
     private Double weightKg;
 
+    // Goals
+    private String goalMode;
+    private Integer calorieTargetKcal;
+    private Integer proteinTargetG;
+    private Integer sugarLimitG;
     private Integer waterGoalMl;
     private Integer fastingDefaultHours;
 

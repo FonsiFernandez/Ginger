@@ -8,5 +8,6 @@ public record ParseMealResponse(
         Double totalProteinG,
         Double totalCarbsG,
         Double totalFatG,
+        Double totalSugarG,
         List<MealItemDto> items
 ) {}

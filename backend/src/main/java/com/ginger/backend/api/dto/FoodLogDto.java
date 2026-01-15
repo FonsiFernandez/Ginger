@@ -5,10 +5,11 @@ import java.time.Instant;
 public record FoodLogDto(
         Long id,
         Long userId,
-        Instant eatenAt,
         String description,
         Double calories,
         Double proteinG,
         Double carbsG,
-        Double fatG
+        Double fatG,
+        Double sugarG,
+        Instant eatenAt
 ) {}

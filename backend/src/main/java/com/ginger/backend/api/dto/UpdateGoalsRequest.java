@@ -1,11 +1,9 @@
 package com.ginger.backend.api.dto;
 
-public record UserDto(
-        Long id,
-        String name,
-        Integer age,
-        Double heightCm,
-        Double weightKg,
+import jakarta.validation.constraints.NotNull;
+
+public record UpdateGoalsRequest(
+        @NotNull Long userId,
         String goalMode,
         Integer calorieTargetKcal,
         Integer proteinTargetG,

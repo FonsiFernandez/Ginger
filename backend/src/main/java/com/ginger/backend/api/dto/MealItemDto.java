@@ -6,5 +6,6 @@ public record MealItemDto(
         Double calories,
         Double proteinG,
         Double carbsG,
-        Double fatG
+        Double fatG,
+        Double sugarG
 ) {}

@@ -6,20 +6,21 @@ import com.ginger.backend.domain.*;
 public class DtoMapper {
 
     public static UserDto toDto(UserProfile u) {
-        return new UserDto(u.getId(), u.getName(), u.getAge(), u.getHeightCm(), u.getWeightKg());
+        return new UserDto(u.getId(), u.getName(), u.getAge(), u.getHeightCm(), u.getWeightKg(), u.getGoalMode(), u.getCalorieTargetKcal(), u.getProteinTargetG(), u.getSugarLimitG(), u.getWaterGoalMl(), u.getFastingDefaultHours());
     }
 
     public static FoodLogDto toDto(FoodLog f) {
         return new FoodLogDto(
                 f.getId(),
                 f.getUser().getId(),
-                f.getEatenAt(),
                 f.getDescription(),
                 f.getCalories(),
                 f.getProteinG(),
                 f.getCarbsG(),
-                f.getFatG()
-        );
+                f.getFatG(),
+                f.getSugarG(),
+                f.getEatenAt()
+                );
     }
 
     public static WaterLogDto toDto(WaterLog w) {

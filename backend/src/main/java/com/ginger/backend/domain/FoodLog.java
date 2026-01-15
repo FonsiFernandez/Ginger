@@ -30,6 +30,7 @@ public class FoodLog {
     private Double proteinG;
     private Double carbsG;
     private Double fatG;
+    private Double sugarG;
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
