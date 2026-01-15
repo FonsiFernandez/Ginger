@@ -2,9 +2,10 @@ package com.ginger.backend.api.dto;
 
 public record TodaySummaryDto(
         Long userId,
-        String date,            // "2026-01-15" (fecha local del servidor)
+        String date,
         double caloriesToday,
         int waterMlToday,
+        Integer waterGoalMl,
         boolean fastingActive,
         String fastingProtocol,
         Long activeFastingId

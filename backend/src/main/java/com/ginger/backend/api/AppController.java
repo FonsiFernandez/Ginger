@@ -84,6 +84,13 @@ public class AppController {
         return toDto(waterRepo.save(log));
     }
 
+    @PostMapping("/water/goal")
+    public UserDto updateWaterGoal(@Valid @RequestBody UpdateWaterGoalRequest req) {
+        var user = userRepo.findById(req.userId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setWaterGoalMl(req.waterGoalMl());
+        return DtoMapper.toDto(userRepo.save(user));
+    }
+
     // ---------------- Fasting ----------------
 
     @PostMapping("/fasting/start")
@@ -112,30 +119,83 @@ public class AppController {
         return toDto(fastingRepo.save(active));
     }
 
-    // ---------------- Summary (Today) ----------------
-
-    @GetMapping("/summary/today")
-    public TodaySummaryDto today(@RequestParam Long userId) {
-        // “hoy” según zona local del servidor (en tu caso, Europa/Berlin normalmente)
-        ZoneId zone = ZoneId.systemDefault();
-        LocalDate today = LocalDate.now(zone);
-
-        Instant from = today.atStartOfDay(zone).toInstant();
-        Instant to = today.plusDays(1).atStartOfDay(zone).toInstant();
-
-        double calories = foodRepo.sumCaloriesBetween(userId, from, to);
-        int waterMl = waterRepo.sumWaterBetween(userId, from, to);
+    @GetMapping("/fasting/status")
+    public FastingStatusDto fastingStatus(@RequestParam Long userId) {
+        var user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         var active = fastingRepo.findFirstByUserIdAndEndedAtIsNullOrderByStartedAtDesc(userId);
 
+        if (active.isEmpty()) {
+            return new FastingStatusDto(
+                    userId,
+                    false,
+                    null,
+                    null,
+                    0,
+                    "No hay ayuno activo. Si quieres, inicia uno con /fasting/start."
+            );
+        }
+
+        var session = active.get();
+        long minutes = java.time.Duration.between(session.getStartedAt(), Instant.now()).toMinutes();
+
+        String protocol = session.getProtocol() == null ? "custom" : session.getProtocol();
+
+        String suggestion = buildFastingSuggestion(protocol, minutes);
+
+        return new FastingStatusDto(
+                userId,
+                true,
+                session.getId(),
+                protocol,
+                minutes,
+                suggestion
+        );
+    }
+
+    private static String buildFastingSuggestion(String protocol, long minutesFasted) {
+        // sugerencias generales (sin medicalizar)
+        if (minutesFasted < 60) {
+            return "Buen inicio. Mantente hidratado (agua, café/té sin azúcar) y evita calorías.";
+        }
+        if (minutesFasted < 8 * 60) {
+            return "Vas bien. Prioriza hidratación; si entrenas, baja intensidad si lo necesitas.";
+        }
+        if (minutesFasted < 12 * 60) {
+            return "Ya estás en una ventana común de ayuno. Si tienes hambre, agua con gas o infusiones pueden ayudar.";
+        }
+        if (minutesFasted < 16 * 60) {
+            return "Cerca de una ventana 16h. Cuando rompas el ayuno, empieza con algo ligero y proteína.";
+        }
+        return "Ventana larga. Si rompes el ayuno, evita un atracón: proteína + fibra + algo de grasa saludable.";
+    }
+
+    // ---------------- Summary (Today) ----------------
+
+    @GetMapping("/summary/today")
+    public TodaySummaryDto todaySummary(@RequestParam Long userId) {
+        var user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        var todayStart = LocalDate.now(ZoneId.systemDefault()).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        var now = Instant.now();
+
+        double caloriesToday = foodRepo.sumCaloriesBetween(userId, todayStart, now).orElse(0.0);
+        int waterMlToday = waterRepo.sumWaterBetween(userId, todayStart, now).orElse(0);
+
+        var activeFasting = fastingRepo.findFirstByUserIdAndEndedAtIsNullOrderByStartedAtDesc(userId);
+
+        Integer goal = user.getWaterGoalMl();
+        if (goal == null) goal = 2000;
+
         return new TodaySummaryDto(
                 userId,
-                today.toString(),
-                calories,
-                waterMl,
-                active.isPresent(),
-                active.map(FastingSession::getProtocol).orElse(null),
-                active.map(FastingSession::getId).orElse(null)
+                LocalDate.now().toString(),
+                caloriesToday,
+                waterMlToday,
+                goal,
+                activeFasting.isPresent(),
+                activeFasting.map(FastingSession::getProtocol).orElse(null),
+                activeFasting.map(FastingSession::getId).orElse(null)
         );
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public interface FoodLogRepo extends JpaRepository<FoodLog, Long> {
 
@@ -17,6 +18,7 @@ public interface FoodLogRepo extends JpaRepository<FoodLog, Long> {
     from FoodLog f
     where f.user.id = :userId and f.eatenAt between :from and :to
   """)
-    double sumCaloriesBetween(@Param("userId") Long userId, @Param("from") Instant from, @Param("to") Instant to);
+    Optional<Double> sumCaloriesBetween(@Param("userId") Long userId, @Param("from") Instant from, @Param("to") Instant to);
+
 }
 

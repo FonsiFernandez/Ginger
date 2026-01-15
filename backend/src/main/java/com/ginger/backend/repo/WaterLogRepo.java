@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public interface WaterLogRepo extends JpaRepository<WaterLog, Long> {
     List<WaterLog> findByUserIdAndDrankAtBetween(Long userId, Instant from, Instant to);
@@ -16,5 +17,6 @@ public interface WaterLogRepo extends JpaRepository<WaterLog, Long> {
     from WaterLog w
     where w.user.id = :userId and w.drankAt between :from and :to
   """)
-    int sumWaterBetween(@Param("userId") Long userId, @Param("from") Instant from, @Param("to") Instant to);
+    Optional<Integer> sumWaterBetween(@Param("userId") Long userId, @Param("from") Instant from, @Param("to") Instant to);
+
 }

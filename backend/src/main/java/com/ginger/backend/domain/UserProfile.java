@@ -26,6 +26,9 @@ public class UserProfile {
     private Double heightCm;
     private Double weightKg;
 
+    private Integer waterGoalMl;
+    private Integer fastingDefaultHours;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 

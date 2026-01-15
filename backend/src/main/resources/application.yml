@@ -1,5 +1,13 @@
 server:
   port: 8081
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always
+
+  app:
+    ai:
+      model: gemini-3-flash-preview
 
 spring:
   application:
