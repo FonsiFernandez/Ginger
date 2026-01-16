@@ -14,9 +14,9 @@ spring:
     name: backend
 
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ginger}
-    username: ${DB_USER:ginger_user}
-    password: ${DB_PASS:ginger_pass}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/ginger}
+    username: ${SPRING_DATASOURCE_USERNAME:ginger_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:ginger_pass}
 
   jpa:
     hibernate:
