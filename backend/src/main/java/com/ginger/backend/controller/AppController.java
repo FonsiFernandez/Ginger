@@ -198,18 +198,31 @@ public class AppController {
         double proteinToday = foodRepo.sumProteinBetween(userId, todayStart, now).orElse(0.0);
         double sugarToday = foodRepo.sumSugarBetween(userId, todayStart, now).orElse(0.0);
         int waterMlToday = waterRepo.sumWaterBetween(userId, todayStart, now).orElse(0);
-        double carbsGToday =Math.max(0.0,( caloriesToday - (proteinToday * 4.0)) / 4.0);
+        double carbsGToday = Math.max(0.0,( caloriesToday - (proteinToday * 4.0)) / 4.0);
 
         Integer waterGoal = user.getWaterGoalMl();
         if (waterGoal == null) waterGoal = 2000;
 
+        Integer calorieTarget = user.getCalorieTargetKcal();
+        if (calorieTarget == null) calorieTarget = 2000;
+
+        Integer proteinTarget = user.getProteinTargetG();
+        if (proteinTarget == null) proteinTarget = 120;
+
+        Integer sugarLimit = user.getSugarLimitG();
+        if (sugarLimit == null) sugarLimit = 0;
+
+        double carbsTargetG = Math.max(0.0, (calorieTarget - (proteinTarget * 4.0)) / 4.0);
+
+
         DailyTargetsDto targets = new DailyTargetsDto(
-                user.getCalorieTargetKcal(),
-                user.getProteinTargetG(),
-                user.getSugarLimitG(),
+                calorieTarget,
+                proteinTarget,
+                sugarLimit,
                 waterGoal,
-                Math.max(0.0,( user.getCalorieTargetKcal() - (user.getProteinTargetG() * 4.0)) / 4.0)
+                carbsTargetG
         );
+
 
         DailyProgressDto consumed = new DailyProgressDto(
                 caloriesToday,
