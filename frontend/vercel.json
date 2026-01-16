@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://ginger-widv.onrender.com"
+      "source": "/api/:path*",
+      "destination": "https://TU_BACKEND_RENDER.onrender.com/api/:path*"
     }
   ]
 }
