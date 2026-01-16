@@ -23,8 +23,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:5174")
-                        .allowedOrigins(
+                        .allowedOrigins("http://localhost:5174",
                                 "https://ginger-frontend-navy.vercel.app"
                         )
                         .allowCredentials(true)
