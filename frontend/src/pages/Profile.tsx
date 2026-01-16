@@ -177,12 +177,12 @@ export default function Profile({ userId, onBack }: { userId: number; onBack: ()
                                 </div>
 
                                 <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-                                    <div className="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm bg-background/60">
-                                        <UserIcon className="h-4 w-4 text-muted-foreground" />
-                                        <span className="text-muted-foreground">
-                      Usuario <span className="font-medium text-foreground">#{userId}</span>
-                    </span>
-                                    </div>
+                    {/*                <div className="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm bg-background/60">*/}
+                    {/*                    <UserIcon className="h-4 w-4 text-muted-foreground" />*/}
+                    {/*                    <span className="text-muted-foreground">*/}
+                    {/*  Usuario <span className="font-medium text-foreground">#{userId}</span>*/}
+                    {/*</span>*/}
+                    {/*                </div>*/}
 
                                     <div className="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm bg-background/60">
                                         <Target className="h-4 w-4 text-muted-foreground" />

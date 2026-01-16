@@ -131,20 +131,20 @@ export default function FoodHistory({
                                 </div>
 
                                 <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-                                    <div className="flex items-center gap-2 rounded-2xl border bg-background/60 px-3 py-2">
-                                        <UserIcon className="h-4 w-4 text-muted-foreground" />
-                                        <select
-                                            className="h-9 rounded-md bg-transparent text-sm outline-none"
-                                            value={selectedUserId}
-                                            onChange={(e) => setSelectedUserId(Number(e.target.value))}
-                                        >
-                                            {users.map((u) => (
-                                                <option key={u.id} value={u.id}>
-                                                    {u.name} (id {u.id})
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
+                                    {/*<div className="flex items-center gap-2 rounded-2xl border bg-background/60 px-3 py-2">*/}
+                                    {/*    <UserIcon className="h-4 w-4 text-muted-foreground" />*/}
+                                    {/*    <select*/}
+                                    {/*        className="h-9 rounded-md bg-transparent text-sm outline-none"*/}
+                                    {/*        value={selectedUserId}*/}
+                                    {/*        onChange={(e) => setSelectedUserId(Number(e.target.value))}*/}
+                                    {/*    >*/}
+                                    {/*        {users.map((u) => (*/}
+                                    {/*            <option key={u.id} value={u.id}>*/}
+                                    {/*                {u.name} (id {u.id})*/}
+                                    {/*            </option>*/}
+                                    {/*        ))}*/}
+                                    {/*    </select>*/}
+                                    {/*</div>*/}
 
                                     <Button
                                         onClick={() => load(page)}
