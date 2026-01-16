@@ -48,13 +48,6 @@ public class ProfileController {
         u.setGoal(r.goal);
         u.setGoalPace(r.goalPace);
 
-        // Calcular targets usando tu service
-        //int calorieTarget = ProfileCalculatorService.calculateCalorieTarget(r);
-        // int waterGoal = ProfileCalculatorService.calculateWaterGoalMl(r.weightKg);
-
-       // u.setCalorieTargetKcal(calorieTarget);
-       // u.setWaterGoalMl(waterGoal);
-
         profileCalculatorService.recalcAndApply(u);
 
         return userProfileRepo.save(u);
