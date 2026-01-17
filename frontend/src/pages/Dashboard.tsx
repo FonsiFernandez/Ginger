@@ -47,7 +47,7 @@ export default function Dashboard({
     const [userId, setUserId] = useState<number>(1);
     const [summary, setSummary] = useState<TodaySummaryDto | null>(null);
     const [waterMl, setWaterMl] = useState<number>(250);
-    const [mealText, setMealText] = useState<string>("café con leche y tostada con mantequilla");
+    const [mealText, setMealText] = useState<string>(null);
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState<string | null>(null);
 
